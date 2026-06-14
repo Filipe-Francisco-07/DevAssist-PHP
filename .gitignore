@@ -1,0 +1,9 @@
+node_modules/
+engine/vendor/
+engine/output/
+engine/input/
+engine/docs/
+engine/.phpunit.cache/
+engine/tools/
+*.vsix
+n8n-workflow.json

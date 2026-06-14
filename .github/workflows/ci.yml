@@ -1,0 +1,58 @@
+name: DocGen CI Pipeline
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+
+  test-and-document:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: engine
+
+    # Secrets mapeados para o env 
+    env:
+      LLM_API_KEY:      ${{ secrets.LLM_API_KEY }}
+      LLM_PROVIDER:     ${{ secrets.LLM_PROVIDER }}
+      LLM_MODEL:        ${{ secrets.LLM_MODEL }}
+      N8N_WEBHOOK_URL:  ${{ secrets.N8N_WEBHOOK_URL }}
+
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup do PHP 8.2
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.2"
+          tools: composer
+          coverage: none
+
+      - name: Instalar as dependências
+        run: composer install --no-interaction --no-progress --prefer-dist
+
+      - name: Executar os testes unitários
+        run: vendor/bin/phpunit --colors=never
+
+      - name: Executar o DocGen
+        if: env.LLM_API_KEY != ''
+        run: php bin/run.php
+
+      - name: Notificar n8n (sucesso)
+        if: success() && env.N8N_WEBHOOK_URL != ''
+        run: |
+          curl -s -X POST "$N8N_WEBHOOK_URL" \
+            -H "Content-Type: application/json" \
+            -d "{\"status\":\"success\",\"repo\":\"${{ github.repository }}\",\"sha\":\"${{ github.sha }}\",\"ref\":\"${{ github.ref_name }}\"}"
+
+      - name: Notificar n8n (falha)
+        if: failure() && env.N8N_WEBHOOK_URL != ''
+        run: |
+          curl -s -X POST "$N8N_WEBHOOK_URL" \
+            -H "Content-Type: application/json" \
+            -d "{\"status\":\"fail\",\"repo\":\"${{ github.repository }}\",\"sha\":\"${{ github.sha }}\",\"ref\":\"${{ github.ref_name }}\"}"

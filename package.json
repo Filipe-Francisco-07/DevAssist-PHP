@@ -1,0 +1,305 @@
+{
+  "name": "devassist-phpdocgen",
+  "displayName": "DevAssist - PHP",
+  "description": "Documenta código PHP automaticamente com IA (OpenAI ou Gemini), gera testes PHPUnit e integra com Git/GitHub.",
+  "version": "0.1.1",
+  "publisher": "FilipeFrancisco",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Filipe-Francisco-07/devassist-php"
+  },
+  "bugs": {
+    "url": "https://github.com/Filipe-Francisco-07/devassist-php/issues"
+  },
+  "homepage": "https://github.com/Filipe-Francisco-07/devassist-php#readme",
+  "keywords": [
+    "php",
+    "documentation",
+    "phpdoc",
+    "ai",
+    "llm",
+    "openai",
+    "gemini",
+    "phpunit",
+    "tests",
+    "git"
+  ],
+  "galleryBanner": {
+    "color": "#3B0764",
+    "theme": "dark"
+  },
+  "dependencies": {
+    "libsodium-wrappers": "^0.7.16"
+  },
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other",
+    "Testing"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./extension.js",
+  "contributes": {
+    "submenus": [
+      {
+        "id": "docgen.submenu",
+        "label": "DevAssist PHP"
+      }
+    ],
+    "commands": [
+      {
+        "command": "docgen.documentSelection",
+        "title": "Documentar trecho selecionado",
+        "category": "DevAssist PHP"
+      },
+      {
+        "command": "docgen.documentFile",
+        "title": "Documentar arquivo inteiro",
+        "category": "DevAssist PHP"
+      },
+      {
+        "command": "docgen.generateTests",
+        "title": "Gerar testes PHPUnit",
+        "category": "DevAssist PHP",
+        "icon": "$(beaker)"
+      },
+      {
+        "command": "docgen.runTests",
+        "title": "Executar testes PHPUnit",
+        "category": "DevAssist PHP",
+        "icon": "$(play)"
+      },
+      {
+        "command": "docgen.pushToGit",
+        "title": "Enviar projeto ao GitHub",
+        "category": "DevAssist PHP",
+        "icon": "$(cloud-upload)"
+      },
+      {
+        "command": "docgen.configurarGit",
+        "title": "Configurar usuário Git",
+        "category": "DevAssist PHP"
+      },
+      {
+        "command": "docgen.openDashboard",
+        "title": "Abrir Dashboard",
+        "category": "DevAssist PHP",
+        "icon": "$(graph)"
+      },
+      {
+        "command": "docgen.setApiKey",
+        "title": "Configurar chave API",
+        "category": "DevAssist PHP"
+      },
+      {
+        "command": "docgen.clearApiKey",
+        "title": "Remover chave API",
+        "category": "DevAssist PHP"
+      },
+      {
+        "command": "docgen.setGithubToken",
+        "title": "Configurar Token do GitHub",
+        "category": "DevAssist PHP"
+      },
+      {
+        "command": "docgen.clearGithubToken",
+        "title": "Remover Token do GitHub",
+        "category": "DevAssist PHP"
+      },
+      {
+        "command": "docgen.setN8nWebhook",
+        "title": "Configurar Webhook n8n",
+        "category": "DevAssist PHP"
+      },
+      {
+        "command": "docgen.clearN8nWebhook",
+        "title": "Remover Webhook n8n",
+        "category": "DevAssist PHP"
+      },
+      {
+        "command": "docgen.exportN8nWorkflow",
+        "title": "Exportar Workflow n8n",
+        "category": "DevAssist PHP"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "submenu": "docgen.submenu",
+          "group": "navigation@99"
+        }
+      ],
+      "docgen.submenu": [
+        {
+          "command": "docgen.documentSelection",
+          "group": "1_doc@1",
+          "when": "editorHasSelection"
+        },
+        {
+          "command": "docgen.documentFile",
+          "group": "1_doc@2"
+        },
+        {
+          "command": "docgen.generateTests",
+          "group": "2_tests@1"
+        },
+        {
+          "command": "docgen.runTests",
+          "group": "2_tests@2"
+        },
+        {
+          "command": "docgen.pushToGit",
+          "group": "3_git@1"
+        },
+        {
+          "command": "docgen.configurarGit",
+          "group": "3_git@2"
+        },
+        {
+          "command": "docgen.openDashboard",
+          "group": "4_dashboard@1"
+        },
+        {
+          "command": "docgen.setN8nWebhook",
+          "group": "5_n8n@1"
+        },
+        {
+          "command": "docgen.clearN8nWebhook",
+          "group": "5_n8n@2"
+        },
+        {
+          "command": "docgen.exportN8nWorkflow",
+          "group": "5_n8n@3"
+        },
+        {
+          "command": "docgen.setApiKey",
+          "group": "6_config@1"
+        },
+        {
+          "command": "docgen.clearApiKey",
+          "group": "6_config@2"
+        },
+        {
+          "command": "docgen.setGithubToken",
+          "group": "6_config@3"
+        },
+        {
+          "command": "docgen.clearGithubToken",
+          "group": "6_config@4"
+        }
+      ]
+    },
+    "configuration": [
+      {
+        "id": "devassist-llm",
+        "title": "DevAssist PHP",
+        "properties": {
+          "phpDocgen.llm.provider": {
+            "type": "string",
+            "enum": [
+              "openai",
+              "gemini"
+            ],
+            "default": "openai",
+            "order": 1,
+            "markdownDescription": "**Provedor de IA** usado para gerar documentação e testes. Requer uma chave API configurada via comando `DevAssist PHP: Configurar chave API`."
+          },
+          "phpDocgen.llm.model": {
+            "type": "string",
+            "default": "",
+            "order": 2,
+            "markdownDescription": "**Modelo específico** do provedor. Deixe em branco para usar o padrão (`gpt-4o-mini` para OpenAI, `gemini-1.5-flash` para Gemini)."
+          },
+          "phpDocgen.llm.base": {
+            "type": "string",
+            "default": "",
+            "order": 3,
+            "markdownDescription": "**URL base da API** (opcional). Para quando estiver usando um proxy ou endpoint customizado. Deixe em branco para usar o endpoint oficial."
+          }
+        }
+      },
+      {
+        "id": "devassist-doc",
+        "title": "DevAssist PHP — Documentação",
+        "properties": {
+          "phpDocgen.autoDocumentOnCommit": {
+            "type": "boolean",
+            "default": true,
+            "order": 1,
+            "markdownDescription": "**Documentar automaticamente ao fazer push.** Quando ativado, a extensão detecta métodos e funções sem PHPDoc no arquivo aberto e gera a documentação antes de commitar. Requer chave API configurada."
+          }
+        }
+      },
+      {
+        "id": "devassist-tests",
+        "title": "DevAssist PHP — Testes (PHPUnit)",
+        "properties": {
+          "phpDocgen.tests.enabled": {
+            "type": "boolean",
+            "default": true,
+            "order": 1,
+            "markdownDescription": "**Habilitar a funcionalidade de testes.** Quando desativado, os comandos de geração e execução de testes ficam bloqueados e `runTestsBeforePush` é ignorado."
+          },
+          "phpDocgen.testsDir": {
+            "type": "string",
+            "default": "tests",
+            "order": 2,
+            "markdownDescription": "**Diretório de saída dos testes gerados**. Os arquivos `*Test.php` serão criados aqui."
+          },
+          "phpDocgen.runTestsAfterGenerate": {
+            "type": "boolean",
+            "default": true,
+            "order": 3,
+            "markdownDescription": "**Executar os testes automaticamente após gerá-los.** Quando ativado, o PHPUnit roda logo após a geração via IA para validar os testes criados."
+          },
+          "phpDocgen.runTestsBeforePush": {
+            "type": "boolean",
+            "default": false,
+            "order": 4,
+            "markdownDescription": "**Executar os testes antes de cada push.** Se algum teste falhar, você será avisado e poderá cancelar o push. Requer `tests.enabled` ativado."
+          }
+        }
+      },
+      {
+        "id": "devassist-n8n",
+        "title": "DevAssist PHP — Notificações (n8n)",
+        "properties": {
+          "phpDocgen.n8n.notifyOnPush": {
+            "type": "boolean",
+            "default": true,
+            "order": 1,
+            "markdownDescription": "**Notificar via n8n após cada push.** Envia um webhook com informações do commit (branch, autor, arquivos alterados, link do Actions). Requer webhook configurado via comando `Configurar Webhook n8n`."
+          },
+          "phpDocgen.n8n.notifyOnTests": {
+            "type": "boolean",
+            "default": true,
+            "order": 2,
+            "markdownDescription": "**Notificar via n8n com o resultado dos testes.** Envia um webhook com a taxa de sucesso, testes que passaram/falharam e link do Actions. Requer webhook configurado."
+          },
+          "phpDocgen.notificationEmail": {
+            "type": "string",
+            "default": "",
+            "order": 3,
+            "markdownDescription": "**Email para notificações**. O workflow exportado via `Exportar Workflow n8n` enviará emails para este endereço."
+          }
+        }
+      },
+      {
+        "id": "devassist-php",
+        "title": "DevAssist PHP — PHP",
+        "properties": {
+          "phpDocgen.php.path": {
+            "type": "string",
+            "default": "php",
+            "order": 1,
+            "markdownDescription": "**Caminho para o executável PHP.** Use `php` para usar o PHP do PATH do sistema, ou informe o caminho absoluto (ex: `C:\\php\\php.exe`, `/usr/bin/php8.2`). O PHP deve ser versão 8.0 ou superior."
+          }
+        }
+      }
+    ]
+  }
+}
