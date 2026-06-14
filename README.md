@@ -114,7 +114,7 @@ O sistema é dividido em duas camadas:
 ### Instalar a extensão
 
 **Via marketplace:**
-Acesse o marketplace do VS Code e busque por **DevAssist PHP**.
+Acesse o marketplace do VS Code e busque por **DevAssist - PHP**.
 ```
 
 **Via arquivo `.vsix`:**
