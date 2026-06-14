@@ -1,6 +1,7 @@
 # DevAssist PHP
 
-> Trabalho de conclusão do curso de Bacharelado em Ciência da Computação; 
+> Trabalho de conclusão do curso de Bacharelado em Ciência da Computação.
+
 > Extensão para Visual Studio Code que gera automaticamente documentação PHPDoc, testes unitários e integração contínua para projetos PHP, com suporte aos modelos de linguagem OpenAI e Google Gemini.
 
 ---
